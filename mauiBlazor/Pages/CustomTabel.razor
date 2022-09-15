@@ -1,0 +1,44 @@
+﻿@page "/customtabel"
+
+@using Newtonsoft.Json.Linq
+@using mauiBlazor.Data
+@inject WeatherForecastService ForecastService
+@inject CustomerService CustomerService
+
+<h3>Custom Tabel Data Customer</h3>
+<p>Custom tabel dengan auto generate header tabel.</p>
+<bzrLibrary.Controls.PthTabel Items="@CustomerService.Customers" OnSelectedItem="@(args => OnDataDipilih(args))"  />
+
+<br />
+
+<h3>Custom Tabel Data Weather Forecast</h3>
+<p>Custom tabel tanpa auto generate header tabel.</p>
+<bzrLibrary.Controls.PthTabel Items="forecasts">
+	<Column>
+		<RadzenDataGridColumn TItem="WeatherForecast" Property="Date" Title="Date">
+			<Template Context="data">
+				@String.Format("{0:d}", data.Date)
+			</Template>
+		</RadzenDataGridColumn>
+		<RadzenDataGridColumn TItem="WeatherForecast" Property="TemperatureF" Title="Temperature (F)"></RadzenDataGridColumn>
+		<RadzenDataGridColumn TItem="WeatherForecast" Property="TemperatureC" Title="Temperature (C)"></RadzenDataGridColumn>
+		<RadzenDataGridColumn TItem="WeatherForecast" Property="Summary" Title="Summary"></RadzenDataGridColumn>
+	</Column>
+</bzrLibrary.Controls.PthTabel>
+
+@code {
+	private Customer _dataDipilih { get; set; }
+	private WeatherForecast[] forecasts;
+	protected override async Task OnInitializedAsync()
+	{
+		forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
+
+	}
+	private void OnDataDipilih(object value)
+	{
+		var json = System.Text.Json.JsonSerializer.Serialize(value);
+		JObject obj = JObject.Parse(json);
+		object data = (object)obj["Data"];
+		_dataDipilih = System.Text.Json.JsonSerializer.Deserialize<Customer>(data.ToString());
+	}
+}

@@ -1,0 +1,44 @@
+﻿@page "/"
+@using mauiBlazor.Data
+@inject WeatherForecastService ForecastService
+@inject CustomerService CustomerService
+
+<h1>DevExpress</h1>
+
+<DxButton Text="Column Chooser" RenderStyle="ButtonRenderStyle.Secondary"
+           CssClass="colum-chooser-button" Click="OnKolomDipilih" />
+<p />
+<DxGrid Data="@forecasts" ShowFilterRow="true" @ref="Grid" ColumnResizeMode="GridColumnResizeMode.NextColumn">
+	<Columns>
+        <DxGridCommandColumn Visible="false" Caption="Command Column"/>
+        <DxDataGridSelectionColumn Visible="false"/>
+        <DxGridDataColumn FieldName="Date" VisibleIndex="0" />
+        <DxGridDataColumn FieldName="TemperatureF"
+                          Caption="Temperature (F)"
+                           />
+        <DxGridDataColumn FieldName="TemperatureC"
+                          Caption="Temperature (C)" 
+                          />
+        <DxGridDataColumn FieldName="Summary"/>
+    </Columns>  
+</DxGrid>
+
+<p />
+<DxComboBox Data="@CustomerService.Customers" @bind-Value="dataDipilih" EditFormat="{0} {1}">
+    <DxListEditorColumn FieldName="Prefix" Caption="Prefix" VisibleIndex="0"></DxListEditorColumn>
+    <DxListEditorColumn FieldName="Nama" Caption="Nama" VisibleIndex="1"></DxListEditorColumn>
+</DxComboBox>
+
+@code{
+    DxGrid Grid { get; set; }
+    private WeatherForecast[] forecasts;
+    private Customer dataDipilih { get; set; } = new Customer();
+    protected override async Task OnInitializedAsync()
+    {
+        forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
+    }
+
+    void OnKolomDipilih(){
+        Grid.ShowColumnChooser(".column-chooser-button");
+    }
+}
