@@ -4,12 +4,24 @@
 @using mauiBlazor.Data
 @inject DataService DataService
 @inject NavigationManager NavigationManager
-<h3>Data Sensor</h3>
+<h3>Data Karyawan</h3>
 <br />
 <RadzenButton Text="Tambah Data" ButtonStyle="ButtonStyle.Secondary" Click="TambahKaryawan"/>
 <br />
 <br />
-
+<pthRazorLibrary.Controls.PthTabel Items="dataKaryawan" OnSelectedItem="@(args => OnDataDipilih(args))">
+	<Column>
+		<RadzenDataGridColumn TItem="DataKaryawan" Property="NamaLengkap" Title="Nama Lengkap"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="DataKaryawan" Property="NamaPanggilan" Title="Nama Panggilan"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="DataKaryawan" Property="Alamat" Title="Alamat"></RadzenDataGridColumn>
+		<RadzenDataGridColumn TItem="DataKaryawan" Property="Kota" Title="Kota"></RadzenDataGridColumn>
+		<RadzenDataGridColumn TItem="DataKaryawan" Property="IdKaryawan" Title="Opsi" Filterable="false" Sortable="false">
+			<Template Context="data">
+				<RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger" Click="@(args => OnHapusData(data))"></RadzenButton>
+			</Template>
+		</RadzenDataGridColumn>
+	</Column>
+</pthRazorLibrary.Controls.PthTabel>
 @code{
 	private List<DataKaryawan> dataKaryawan = new List<DataKaryawan>();
 

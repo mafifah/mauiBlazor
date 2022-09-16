@@ -4,7 +4,6 @@ using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Grpc.Core;
 using Bases.BlazorSharedBases.Protos;
 using Mapster;
-using gRPCAutomasiKandang.Model;
 
 namespace mauiBlazor.Data
 {
