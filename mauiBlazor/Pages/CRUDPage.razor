@@ -1,0 +1,42 @@
+﻿@page "/crudpage"
+
+@using Newtonsoft.Json.Linq
+@using mauiBlazor.Data
+@inject DataService DataService
+@inject NavigationManager NavigationManager
+<h3>Data Sensor</h3>
+<br />
+<RadzenButton Text="Tambah Data" ButtonStyle="ButtonStyle.Secondary" Click="TambahKaryawan"/>
+<br />
+<br />
+
+@code{
+	private List<DataKaryawan> dataKaryawan = new List<DataKaryawan>();
+
+	protected override async Task OnInitializedAsync()
+	{
+		dataKaryawan.Clear();
+		dataKaryawan = await DataService.GetDataKaryawan();
+		this.StateHasChanged();
+	}
+
+	void TambahKaryawan(){
+		NavigationManager.NavigateTo("/form");
+	}
+
+	private void OnDataDipilih(object value)
+	{
+		var json = System.Text.Json.JsonSerializer.Serialize(value);
+		JObject obj = JObject.Parse(json);
+		object data = (object)obj["Data"];
+		DataKaryawan datadipilih = System.Text.Json.JsonSerializer.Deserialize<DataKaryawan>(data.ToString());
+		DataService.SetDataDipilih(datadipilih);
+		NavigationManager.NavigateTo("/form");
+	}
+
+	private async void OnHapusData(DataKaryawan data){
+		DataService.DeleteKaryawan(data.IdKaryawan);
+		dataKaryawan.Remove(data);
+		OnInitializedAsync();
+	}
+}

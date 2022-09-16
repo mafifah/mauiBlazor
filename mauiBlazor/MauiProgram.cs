@@ -1,6 +1,4 @@
-﻿using DevExpress.Blazor.Reporting;
-using mauiBlazor.Data;
-using Microsoft.Extensions.DependencyInjection;
+﻿using mauiBlazor.Data;
 using Radzen;
 
 namespace mauiBlazor;
@@ -25,9 +23,8 @@ public static class MauiProgram
 		builder.Services.AddSingleton<WeatherForecastService>();
         builder.Services.AddSingleton<CustomerService>();
         builder.Services.AddSingleton<ReportService>();
+        builder.Services.AddSingleton<DataService>();
         builder.Services.AddDevExpressBlazor(configure => configure.BootstrapVersion = DevExpress.Blazor.BootstrapVersion.v5);
-        builder.Services.AddDevExpressServerSideBlazorReportViewer();
-		builder.Services.AddDevExpressBlazorReporting();
 		builder.Services.AddScoped<DialogService>();
         builder.Services.AddScoped<NotificationService>();
         builder.Services.AddScoped<TooltipService>();

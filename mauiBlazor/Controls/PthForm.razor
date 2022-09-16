@@ -1,0 +1,25 @@
+﻿<RadzenCard>
+      <h4>@NamaForm</h4>
+          <div class="container-fluid">
+              <div class="row">
+                  <div class="col-md-12">
+                    @Konten
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-md-12 d-flex align-items-end justify-content-center" style="margin-top: 16px;">
+                    @Footer
+                </div>
+            </div>
+        </div>
+</RadzenCard>
+@code {
+    [Parameter]
+    public string NamaForm { get; set; }
+
+    [Parameter]
+    public RenderFragment? Konten { get; set; }
+
+    [Parameter]
+    public RenderFragment? Footer { get; set; }
+}

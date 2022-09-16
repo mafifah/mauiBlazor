@@ -1,6 +1,7 @@
 ﻿@page "/"
+@using Mapster
 @using mauiBlazor.Data
-@inject WeatherForecastService ForecastService
+@inject DataService DataService
 @inject CustomerService CustomerService
 
 <h1>DevExpress</h1>
@@ -8,34 +9,38 @@
 <DxButton Text="Column Chooser" RenderStyle="ButtonRenderStyle.Secondary"
            CssClass="colum-chooser-button" Click="OnKolomDipilih" />
 <p />
-<DxGrid Data="@forecasts" ShowFilterRow="true" @ref="Grid" ColumnResizeMode="GridColumnResizeMode.NextColumn">
+<DxGrid Data="@dataKaryawan" ShowFilterRow="true" @ref="Grid" ColumnResizeMode="GridColumnResizeMode.NextColumn">
 	<Columns>
-        <DxGridCommandColumn Visible="false" Caption="Command Column"/>
+        <DxGridCommandColumn Visible="false" Caption="Opsi"/>
         <DxDataGridSelectionColumn Visible="false"/>
-        <DxGridDataColumn FieldName="Date" VisibleIndex="0" />
-        <DxGridDataColumn FieldName="TemperatureF"
-                          Caption="Temperature (F)"
-                           />
-        <DxGridDataColumn FieldName="TemperatureC"
-                          Caption="Temperature (C)" 
-                          />
-        <DxGridDataColumn FieldName="Summary"/>
+        <DxGridDataColumn FieldName="NamaLengkap" Caption="Nama Lengkap" VisibleIndex="0" />
+        <DxGridDataColumn FieldName="NamaPanggilan" Caption="Nama Panggilan" />
+        <DxGridDataColumn FieldName="Alamat" Caption="Alamat" />
     </Columns>  
 </DxGrid>
 
 <p />
-<DxComboBox Data="@CustomerService.Customers" @bind-Value="dataDipilih" EditFormat="{0} {1}">
+<DxComboBox Data="@CustomerService.Customers" @bind-Value="dataDipilih" EditFormat="{0} {1}"
+            FilteringMode="DataGridFilteringMode.Contains"ListRenderMode="ListRenderMode.Virtual">
     <DxListEditorColumn FieldName="Prefix" Caption="Prefix" VisibleIndex="0"></DxListEditorColumn>
     <DxListEditorColumn FieldName="Nama" Caption="Nama" VisibleIndex="1"></DxListEditorColumn>
 </DxComboBox>
 
 @code{
     DxGrid Grid { get; set; }
-    private WeatherForecast[] forecasts;
     private Customer dataDipilih { get; set; } = new Customer();
+    private List<DataKaryawan> dataKaryawan = new List<DataKaryawan>();
+
     protected override async Task OnInitializedAsync()
     {
-        forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
+        dataKaryawan.Clear();
+        var data = DataService.GetData();
+        await foreach (var item in data)
+        {
+            var karyawan = item.Adapt<DataKaryawan>();
+            dataKaryawan.Add(karyawan);
+            this.StateHasChanged();
+        }
     }
 
     void OnKolomDipilih(){

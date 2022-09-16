@@ -3,7 +3,7 @@
 
 <RadzenDataGrid Data="@Items" TItem="TData" AllowPaging="true"
 				AllowFiltering="true" AllowSorting="true" AllowColumnResize="true"
-				AllowColumnPicking="true" RowClick="@OnSelectedItem"
+				AllowColumnPicking="true" RowDoubleClick="@OnSelectedItem"
 				FilterMode="FilterMode.SimpleWithMenu" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
                 SelectionMode="Radzen.DataGridSelectionMode.Single" @bind-Value="SelectedData">
     <Columns>
@@ -23,7 +23,7 @@
     [Parameter]
     public IList<TData> Items { get; set; }
     [Parameter]
-    public RenderFragment? Column { get; set; }
+    public RenderFragment Column { get; set; }
 
     [Parameter]
     public IList<TData> SelectedData { get; set; }

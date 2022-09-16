@@ -56,14 +56,31 @@
     <ItemGroup>
       <PackageReference Include="DevExpress.Blazor" Version="22.1.5" />
       <PackageReference Include="DevExpress.Blazor.Reporting" Version="22.1.5" />
+      <PackageReference Include="Google.Protobuf" Version="3.21.6" />
+      <PackageReference Include="Grpc.Core" Version="2.46.3" />
+      <PackageReference Include="Grpc.Net.Client" Version="2.48.0" />
+      <PackageReference Include="Grpc.Net.Client.Web" Version="2.48.0" />
+      <PackageReference Include="Grpc.Net.ClientFactory" Version="2.40.0" />
+      <PackageReference Include="Grpc.Tools" Version="2.48.1">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+      <PackageReference Include="Mapster" Version="7.3.0" />
       <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.0.0" />
+      <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
       <PackageReference Include="Radzen.Blazor" Version="3.20.12" />
     </ItemGroup>
 
     <ItemGroup>
-      <Reference Include="bzrLibrary">
-        <HintPath>..\..\bzrLibrary\bzrLibrary\obj\Debug\net6.0\bzrLibrary.dll</HintPath>
+      <Reference Include="gRPCAutomasiKandang">
+        <HintPath>..\..\gRPCAutomasiKandang\gRPCAutomasiKandang\obj\Debug\net6.0\gRPCAutomasiKandang.dll</HintPath>
+      </Reference>
+      <Reference Include="Pantheon">
+        <HintPath>C:\Users\mafif\source\repos\Pantheon\Pantheon\bin\Debug\net6.0\Pantheon.dll</HintPath>
+      </Reference>
+      <Reference Include="pthRazorLibrary">
+        <HintPath>C:\Users\mafif\source\repos\Pantheon\pthRazorLibrary\obj\Debug\net6.0\pthRazorLibrary.dll</HintPath>
       </Reference>
     </ItemGroup>
 

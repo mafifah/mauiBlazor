@@ -3,6 +3,7 @@
 @using mauiBlazor.Data
 @inject WeatherForecastService ForecastService
 @inject CustomerService CustomerService
+@inject DialogService DialogService
 <h3>Radzen Grid Lookup</h3>
 
 <RadzenDropDownDataGrid TValue="string" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" 
@@ -18,10 +19,12 @@
 
 <br/>
 <RadzenLogin AllowRegister="false" AllowResetPassword="true" Login="( args => OnLogin(args))"/>
+
 @code {
 	RadzenDataGrid<WeatherForecast> grid;
 	private WeatherForecast[] forecasts;
 	private IList<WeatherForecast> dataDipilih { get; set; }
+	int orderID = 10248;
 	protected override async Task OnInitializedAsync()
 	{
 		forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
