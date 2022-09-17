@@ -3,7 +3,7 @@
 
 <RadzenDataGrid Data="@Items" TItem="TData" AllowPaging="true"
 				AllowFiltering="true" AllowSorting="true" AllowColumnResize="true"
-				AllowColumnPicking="true" RowDoubleClick="@OnSelectedItem"
+                AllowColumnPicking="true" RowClick="@DataSelected"
 				FilterMode="FilterMode.SimpleWithMenu" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
                 SelectionMode="Radzen.DataGridSelectionMode.Single" @bind-Value="SelectedData">
     <Columns>
@@ -19,18 +19,26 @@
 </RadzenDataGrid>
 @code {
 
+
     public List<string> Atribut = new List<string>();
+
     [Parameter]
     public IList<TData> Items { get; set; }
     [Parameter]
     public RenderFragment Column { get; set; }
 
-    [Parameter]
     public IList<TData> SelectedData { get; set; }
 
     [Parameter]
-    public EventCallback OnSelectedItem { get; set; }
+    public TData SelectedItem { get; set; }
 
+    [Parameter]
+    public EventCallback<TData> OnDataSelected { get; set; }
+
+    public async Task DataSelected()
+    {
+        await this.OnDataSelected.InvokeAsync(this.SelectedItem);
+    }
 	protected override void OnParametersSet()
 	{
         var json = System.Text.Json.JsonSerializer.Serialize(Items);

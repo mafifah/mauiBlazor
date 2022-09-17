@@ -30,18 +30,9 @@
 
 <br />
 <br />
-<RadzenDataGrid Data="@dataKaryawan" TItem="DataKaryawan" AllowPaging="true"
-                AllowFiltering="true" AllowSorting="true" AllowColumnResize="true"
-                FilterMode="FilterMode.SimpleWithMenu" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
-                SelectionMode="Radzen.DataGridSelectionMode.Single">
-    <Columns>
-            <RadzenDataGridColumn TItem="DataKaryawan" Property="NamaLengkap" Title="NamaLengkap"></RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="DataKaryawan" Property="NamaPanggilan" Title="NamaPanggilan"></RadzenDataGridColumn>
-            <RadzenDataGridColumn TItem="DataKaryawan" Property="Alamat" Title="Alamat"></RadzenDataGridColumn>
-    </Columns>
-</RadzenDataGrid>
 @code {
     public List<DataKaryawan> dataKaryawan { get; set; } = new List<DataKaryawan>();
+	private DataKaryawan karyawan { get; set; } = new DataKaryawan();
     protected override async Task OnInitializedAsync()
     {
         dataKaryawan.Clear();

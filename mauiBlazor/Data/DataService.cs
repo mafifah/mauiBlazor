@@ -10,92 +10,49 @@ namespace mauiBlazor.Data
     public class DataService : ObservableObject
     {
         public List<DataKaryawan> DataKaryawan= new List<DataKaryawan>();
-        public DataKaryawan karyawanDipilih { get; set; } = new DataKaryawan();
+
+        private ReadKaryawanService.ReadKaryawanServiceClient _readClient { get; set; }
+        private WriteKaryawanService.WriteKaryawanServiceClient _writeClient { get; set; }
+
         public DataService()
         {
+            var httpClient = new HttpClient(new GrpcWebHandler(GrpcWebMode.GrpcWeb, new HttpClientHandler()));
+            var channel = GrpcChannel.ForAddress("https://localhost:5001/", new GrpcChannelOptions { HttpClient = httpClient });
+            _readClient = new ReadKaryawanService.ReadKaryawanServiceClient(channel);
+            _writeClient = new WriteKaryawanService.WriteKaryawanServiceClient(channel);
         }
-
-        public async Task SetDataDipilih(DataKaryawan karyawan)
-        {
-            karyawanDipilih = karyawan;
-        }
+        
         public async Task<List<DataKaryawan>> GetDataKaryawan()
         {
-            DataKaryawan.Clear();
-            try
-            {
-                var httpClient = new HttpClient(new GrpcWebHandler(GrpcWebMode.GrpcWeb, new HttpClientHandler()));
-                var channel = GrpcChannel.ForAddress("https://localhost:5001/", new GrpcChannelOptions { HttpClient = httpClient });
-                var client = new ReadKaryawanService.ReadKaryawanServiceClient(channel);
-                var request = new GetAllKaryawanRequest();
-                var reply = client.GetAll(request);
-                var hasil = reply.DaftarKaryawan.Adapt<List<DataKaryawan>>();
-                return hasil;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
-            return DataKaryawan;
+            var request = new GetAllKaryawanRequest();
+            var reply = _readClient.GetAll(request);
+            return reply.DaftarKaryawan.Adapt<List<DataKaryawan>>();
         }
 
-        public async Task InsertKaryawan(DataKaryawan karyawan)
+        public async Task<bool> InsertKaryawan(DataKaryawan karyawan)
         {
-            try
-            {
-                var httpClient = new HttpClient(new GrpcWebHandler(GrpcWebMode.GrpcWeb, new HttpClientHandler()));
-                var channel = GrpcChannel.ForAddress("https://localhost:5001/", new GrpcChannelOptions { HttpClient = httpClient });
-                var client = new WriteKaryawanService.WriteKaryawanServiceClient(channel);
-                var request = karyawan.Adapt<WriteKaryawanRequest>();
-                var reply = client.InsertKaryawan(request);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
+            var request = karyawan.Adapt<WriteKaryawanRequest>();
+            var reply = await _writeClient.InsertKaryawanAsync(request);
+            return reply.IsOK;
         }
 
-        public async Task UpdateKaryawan(DataKaryawan karyawan)
+        public async Task<bool> UpdateKaryawan(DataKaryawan karyawan)
         {
-            try
-            {
-                var httpClient = new HttpClient(new GrpcWebHandler(GrpcWebMode.GrpcWeb, new HttpClientHandler()));
-                var channel = GrpcChannel.ForAddress("https://localhost:5001/", new GrpcChannelOptions { HttpClient = httpClient });
-                var client = new WriteKaryawanService.WriteKaryawanServiceClient(channel);
-                var request = new UpdateKaryawanRequest(karyawan.Adapt<UpdateKaryawanRequest>());
-                var reply = client.UpdateKaryawan(request);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
+            var request = karyawan.Adapt<UpdateKaryawanRequest>();
+            var reply = await _writeClient.UpdateKaryawanAsync(request);
+            return reply.IsOK;
         }
 
-        public async Task DeleteKaryawan(Guid idkaryawan)
+        public async Task<bool> DeleteKaryawan(Guid idkaryawan)
         {
-            try
-            {
-                var httpClient = new HttpClient(new GrpcWebHandler(GrpcWebMode.GrpcWeb, new HttpClientHandler()));
-                var channel = GrpcChannel.ForAddress("https://localhost:5001/", new GrpcChannelOptions { HttpClient = httpClient });
-                var client = new WriteKaryawanService.WriteKaryawanServiceClient(channel);
-                var request = new DeleteKaryawanRequest
-                {
-                    IdKaryawan = idkaryawan.ToString(),
-                };
-                var reply = client.DeleteKaryawan(request);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
+            var request = new DeleteKaryawanRequest{ IdKaryawan = idkaryawan.ToString()};
+            var reply = await _writeClient.DeleteKaryawanAsync(request);
+            return reply.IsOK;
+            
         }
-
         public IAsyncEnumerable<proKaryawan> GetData()
         {
-            var httpClient = new HttpClient(new GrpcWebHandler(GrpcWebMode.GrpcWeb, new HttpClientHandler()));
-            var channel = GrpcChannel.ForAddress("https://localhost:5001", new GrpcChannelOptions { HttpClient = httpClient });
-            var client = new ReadKaryawanService.ReadKaryawanServiceClient(channel);
-            var request = client.GetAllStream(new GetAllKaryawanRequest());
+            var request = _readClient.GetAllStream(new GetAllKaryawanRequest());
             return request.ResponseStream.ReadAllAsync();
         }
     }

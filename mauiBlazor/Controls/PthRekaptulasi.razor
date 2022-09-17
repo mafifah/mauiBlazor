@@ -1,0 +1,34 @@
+﻿@typeparam TData
+<RadzenProgressBar Value="1500" ShowValue="false" ProgressBarStyle="ProgressBarStyle.Secondary" Mode="ProgressBarMode.Indeterminate" Visible="@IsLoading" />
+<RadzenSplitter Orientation="Radzen.Orientation.Vertical" Collapse=@OnCollapse Expand=@OnExpand style="height: 900px; border: 0px solid rgba(0,0,0,.08);">
+	<RadzenSplitterPane Size="100px">
+		<RadzenSplitter Collapse=@OnCollapse Expand=@OnExpand>
+			<RadzenSplitterPane Size="30%" Min="30px" Max="50%" Visible="@IsRekapitulasiVisible">
+				<h5>Rekapitulasi</h5>
+				<pthRazorLibrary.Controls.PthTabel Items="@DataRekapitulasi" OnSelectedItem="@OnSelectedItem" />
+			</RadzenSplitterPane>
+			<RadzenSplitterPane>
+				@Form
+			</RadzenSplitterPane>
+		</RadzenSplitter>
+	</RadzenSplitterPane>
+</RadzenSplitter>
+@code {
+	[Parameter]
+	public bool IsRekapitulasiVisible { get; set; } = true;
+	[Parameter]
+	public bool IsLoading { get; set; }
+	[Parameter]
+	public RenderFragment? Form { get; set; }
+	[Parameter]
+	public IList<TData> DataRekapitulasi { get; set; }
+	[Parameter]
+	public EventCallback OnSelectedItem { get; set; }
+
+	void OnCollapse(RadzenSplitterEventArgs args)
+	{
+	}
+	void OnExpand(RadzenSplitterEventArgs args)
+	{
+	}
+}

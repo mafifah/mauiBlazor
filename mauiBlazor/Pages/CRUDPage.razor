@@ -1,54 +1,87 @@
 ﻿@page "/crudpage"
-
 @using Newtonsoft.Json.Linq
 @using mauiBlazor.Data
 @inject DataService DataService
 @inject NavigationManager NavigationManager
-<h3>Data Karyawan</h3>
-<br />
-<RadzenButton Text="Tambah Data" ButtonStyle="ButtonStyle.Secondary" Click="TambahKaryawan"/>
-<br />
-<br />
-<pthRazorLibrary.Controls.PthTabel Items="dataKaryawan" OnSelectedItem="@(args => OnDataDipilih(args))">
-	<Column>
-		<RadzenDataGridColumn TItem="DataKaryawan" Property="NamaLengkap" Title="Nama Lengkap"></RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="DataKaryawan" Property="NamaPanggilan" Title="Nama Panggilan"></RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="DataKaryawan" Property="Alamat" Title="Alamat"></RadzenDataGridColumn>
-		<RadzenDataGridColumn TItem="DataKaryawan" Property="Kota" Title="Kota"></RadzenDataGridColumn>
-		<RadzenDataGridColumn TItem="DataKaryawan" Property="IdKaryawan" Title="Opsi" Filterable="false" Sortable="false">
-			<Template Context="data">
-				<RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger" Click="@(args => OnHapusData(data))"></RadzenButton>
-			</Template>
-		</RadzenDataGridColumn>
-	</Column>
-</pthRazorLibrary.Controls.PthTabel>
+<mauiBlazor.Controls.PthRekaptulasi DataRekapitulasi="_daftarKaryawan" OnSelectedItem="@(args => OnDataDipilih(args))" IsLoading="@_isLoading" IsRekapitulasiVisible="true">
+	<Form>
+		<pthRazorLibrary.Controls.PthForm NamaForm="@_namaForm">
+			<KontenForm>
+				<pthRazorLibrary.Controls.PthEntri Caption="Nama Lengkap" @bind-BindingValue="@_karyawan.NamaLengkap"/>
+				<pthRazorLibrary.Controls.PthEntri Caption="Nama Panggilan" @bind-BindingValue="@_karyawan.NamaPanggilan" />
+				<pthRazorLibrary.Controls.PthEntri Caption="Alamat" @bind-BindingValue="@_karyawan.Alamat" />
+				<pthRazorLibrary.Controls.PthEntri Caption="Kota" @bind-BindingValue="@_karyawan.Kota" />
+			</KontenForm>
+			<FooterForm>
+				<RadzenButton ButtonStyle="ButtonStyle.Secondary" Icon="save" Text="Simpan" Click="OnSimpanData" />&nbsp;
+				<RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Text="Hapus" Click="OnHapusData" />
+			</FooterForm>
+		</pthRazorLibrary.Controls.PthForm>
+	</Form>
+</mauiBlazor.Controls.PthRekaptulasi>
 @code{
-	private List<DataKaryawan> dataKaryawan = new List<DataKaryawan>();
+	private string _namaForm { get; set; } = "Tambah Karyawan";
+	private List<DataKaryawan> _daftarKaryawan = new List<DataKaryawan>();
+	private DataKaryawan _karyawan { get; set; } = new DataKaryawan();
+
+	private bool _isVisible { get; set; } = true;
+	private bool _isLoading { get; set; }
 
 	protected override async Task OnInitializedAsync()
 	{
-		dataKaryawan.Clear();
-		dataKaryawan = await DataService.GetDataKaryawan();
+		_daftarKaryawan.Clear();
+		_daftarKaryawan = await DataService.GetDataKaryawan();
 		this.StateHasChanged();
 	}
 
-	void TambahKaryawan(){
-		NavigationManager.NavigateTo("/form");
+	async void OnSimpanData()
+	{
+		_isLoading = true;
+		await Task.Delay(250);
+		var hasil = false;
+		if (_namaForm.Contains("Tambah"))
+		{
+			hasil = await DataService.InsertKaryawan(_karyawan);
+		}
+		else
+		{
+			hasil = await DataService.UpdateKaryawan(_karyawan);
+		}
+		if(hasil)
+			_karyawan = new DataKaryawan();
+		await OnInitializedAsync();
+		_isLoading = false;
+		StateHasChanged();
 	}
 
-	private void OnDataDipilih(object value)
+	void OnDataDipilih(object value)
 	{
 		var json = System.Text.Json.JsonSerializer.Serialize(value);
 		JObject obj = JObject.Parse(json);
 		object data = (object)obj["Data"];
-		DataKaryawan datadipilih = System.Text.Json.JsonSerializer.Deserialize<DataKaryawan>(data.ToString());
-		DataService.SetDataDipilih(datadipilih);
-		NavigationManager.NavigateTo("/form");
+		DataKaryawan dataDipilih = System.Text.Json.JsonSerializer.Deserialize<DataKaryawan>(data.ToString());
+		_karyawan = dataDipilih;
+		_namaForm = "Form Edit Karyawan";
 	}
 
-	private async void OnHapusData(DataKaryawan data){
-		DataService.DeleteKaryawan(data.IdKaryawan);
-		dataKaryawan.Remove(data);
-		OnInitializedAsync();
+	private async void OnHapusData(){
+		_isLoading = true;
+		await Task.Delay(250);
+		var hasil = await DataService.DeleteKaryawan(_karyawan.IdKaryawan);
+		if (hasil)
+		{
+			_karyawan = new DataKaryawan();
+			await OnInitializedAsync();
+		}
+		_isLoading = false;
+		StateHasChanged();
+	}
+
+	void OnCollapse(RadzenSplitterEventArgs args)
+	{
+	}
+
+	void OnExpand(RadzenSplitterEventArgs args)
+	{
 	}
 }

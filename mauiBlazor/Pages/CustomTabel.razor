@@ -24,7 +24,6 @@
 	private Customer _dataDipilih { get; set; }
 	private WeatherForecast[] forecasts;
 	private List<DataKaryawan> dataKaryawan = new List<DataKaryawan>();
-
     protected override async Task OnInitializedAsync()
     {
 		forecasts = await ForecastService.GetForecastAsync(DateTime.Now);

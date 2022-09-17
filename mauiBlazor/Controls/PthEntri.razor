@@ -1,17 +1,26 @@
-﻿<div class="row" style="padding:5px;">
-    <div class="col-md-4 align-items-center d-flex">
-        <RadzenLabel Text="@LabelEntri" />
-    </div>
-    <div class="col-md-8">
-        @Entri
-    </div>
+﻿<div class="mb-3 col-md-6">
+	<label class="form-label">@Caption</label>
+	<input type="text" class="form-control" @bind-value="@BindingValue">
 </div>
 
 @code {
     [Parameter]
-    public string LabelEntri { get; set; }
+    public string? Caption { get; set; }
+
+    private string _value;
 
     [Parameter]
-    public RenderFragment? Entri { get; set; }
+    public string BindingValue 
+    { 
+        get => _value;
+        set 
+        { if (_value == value) return;
+            _value = value;
+            BindingValueChanged.InvokeAsync(value);
+        }
+    }
+    [Parameter]
+    public EventCallback<string> BindingValueChanged { get; set; }
 
+    
 }
