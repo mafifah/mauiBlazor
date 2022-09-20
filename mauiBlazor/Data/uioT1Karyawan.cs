@@ -1,6 +1,6 @@
 ﻿namespace mauiBlazor.Data
 {
-    public class DataKaryawan
+    public class uioT1Karyawan
     {
         public Guid IdKaryawan { get; set; }
         public string? NamaLengkap { get; set; }

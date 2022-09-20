@@ -73,14 +73,14 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Reference Include="gRPC">
-        <HintPath>..\..\gRPCAutomasiKandang\gRPCAutomasiKandang\obj\Debug\net6.0\gRPC.dll</HintPath>
-      </Reference>
       <Reference Include="Pantheon">
         <HintPath>C:\Users\mafif\source\repos\Pantheon\Pantheon\bin\Debug\net6.0\Pantheon.dll</HintPath>
       </Reference>
       <Reference Include="pthRazorLibrary">
         <HintPath>C:\Users\mafif\source\repos\Pantheon\pthRazorLibrary\obj\Debug\net6.0\pthRazorLibrary.dll</HintPath>
+      </Reference>
+      <Reference Include="Shared">
+        <HintPath>..\Shared\obj\Debug\net6.0\Shared.dll</HintPath>
       </Reference>
     </ItemGroup>
 

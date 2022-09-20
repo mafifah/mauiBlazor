@@ -2,41 +2,43 @@
 using Grpc.Net.Client;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Grpc.Core;
-using Bases.BlazorSharedBases.Protos;
 using Mapster;
+using Shared.Protos;
+using static Shared.Protos.svpReadKaryawan;
+using static Shared.Protos.svpWriteKaryawan;
 
 namespace mauiBlazor.Data
 {
     public class DataService : ObservableObject
     {
-        public List<DataKaryawan> DataKaryawan= new List<DataKaryawan>();
+        public List<uioT1Karyawan> DataKaryawan= new List<uioT1Karyawan>();
 
-        private ReadKaryawanService.ReadKaryawanServiceClient _readClient { get; set; }
-        private WriteKaryawanService.WriteKaryawanServiceClient _writeClient { get; set; }
+        private svpReadKaryawanClient _readClient { get; set; }
+        private svpWriteKaryawanClient _writeClient { get; set; }
 
         public DataService()
         {
             var httpClient = new HttpClient(new GrpcWebHandler(GrpcWebMode.GrpcWeb, new HttpClientHandler()));
             var channel = GrpcChannel.ForAddress("https://localhost:5001/", new GrpcChannelOptions { HttpClient = httpClient });
-            _readClient = new ReadKaryawanService.ReadKaryawanServiceClient(channel);
-            _writeClient = new WriteKaryawanService.WriteKaryawanServiceClient(channel);
+            _readClient = new svpReadKaryawanClient(channel);
+            _writeClient = new svpWriteKaryawanClient(channel);
         }
         
-        public async Task<List<DataKaryawan>> GetDataKaryawan()
+        public async Task<List<uioT1Karyawan>> GetDataKaryawan()
         {
             var request = new GetAllKaryawanRequest();
             var reply = _readClient.GetAll(request);
-            return reply.DaftarKaryawan.Adapt<List<DataKaryawan>>();
+            return reply.DaftarKaryawan.Adapt<List<uioT1Karyawan>>();
         }
 
-        public async Task<bool> InsertKaryawan(DataKaryawan karyawan)
+        public async Task<bool> InsertKaryawan(uioT1Karyawan karyawan)
         {
             var request = karyawan.Adapt<WriteKaryawanRequest>();
             var reply = await _writeClient.InsertKaryawanAsync(request);
             return reply.IsOK;
         }
 
-        public async Task<bool> UpdateKaryawan(DataKaryawan karyawan)
+        public async Task<bool> UpdateKaryawan(uioT1Karyawan karyawan)
         {
             var request = karyawan.Adapt<UpdateKaryawanRequest>();
             var reply = await _writeClient.UpdateKaryawanAsync(request);

@@ -8,22 +8,23 @@
 @inject DataService DataService
 
 <p>Custom tabel dengan auto generate header tabel.</p>
-<pthRazorLibrary.Controls.PthTabel Items="dataKaryawan" OnSelectedItem="@(args => OnDataDipilih(args))"  />
+<mauiBlazor.Controls.PthTabel Items="forecasts"/>
 
 <br />
 <p>Custom tabel tanpa auto generate header tabel.</p>
 <pthRazorLibrary.Controls.PthTabel Items="dataKaryawan">
 	<Column>
-		<RadzenDataGridColumn TItem="DataKaryawan" Property="NamaLengkap" Title="NamaLengkap"></RadzenDataGridColumn>
-		<RadzenDataGridColumn TItem="DataKaryawan" Property="NamaPanggilan" Title="NamaPanggilan"></RadzenDataGridColumn>
-		<RadzenDataGridColumn TItem="DataKaryawan" Property="Alamat" Title="Alamat"></RadzenDataGridColumn>
+		<RadzenDataGridColumn TItem="uioT1Karyawan" Property="NamaLengkap" Title="NamaLengkap"></RadzenDataGridColumn>
+		<RadzenDataGridColumn TItem="uioT1Karyawan" Property="NamaPanggilan" Title="NamaPanggilan"></RadzenDataGridColumn>
+		<RadzenDataGridColumn TItem="uioT1Karyawan" Property="Alamat" Title="Alamat"></RadzenDataGridColumn>
 	</Column>
 </pthRazorLibrary.Controls.PthTabel>
 <br />
 @code {
+	public string Test = "123";
 	private Customer _dataDipilih { get; set; }
 	private WeatherForecast[] forecasts;
-	private List<DataKaryawan> dataKaryawan = new List<DataKaryawan>();
+	private List<uioT1Karyawan> dataKaryawan = new List<uioT1Karyawan>();
     protected override async Task OnInitializedAsync()
     {
 		forecasts = await ForecastService.GetForecastAsync(DateTime.Now);

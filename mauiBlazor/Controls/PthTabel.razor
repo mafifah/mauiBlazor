@@ -1,24 +1,23 @@
 ﻿@typeparam TData
 @using Newtonsoft.Json.Linq
-
+@inject IJSRuntime js
 <RadzenDataGrid Data="@Items" TItem="TData" AllowPaging="true"
 				AllowFiltering="true" AllowSorting="true" AllowColumnResize="true"
                 AllowColumnPicking="true" RowClick="@DataSelected"
 				FilterMode="FilterMode.SimpleWithMenu" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
-                SelectionMode="Radzen.DataGridSelectionMode.Single" @bind-Value="SelectedData">
+                SelectionMode="Radzen.DataGridSelectionMode.Single" @bind-Value="SelectedData" @bind-value="@NamaControl">
     <Columns>
         @Column
         @if(Column == null)
         {
             @foreach (var propertyname in Atribut)
             {
-                <RadzenDataGridColumn TItem="TData" Property="@propertyname" Title="@propertyname"></RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="TData" Property="@propertyname" Title="@propertyname"/>
             }
         }
     </Columns>
 </RadzenDataGrid>
 @code {
-
 
     public List<string> Atribut = new List<string>();
 
@@ -35,6 +34,21 @@
     [Parameter]
     public EventCallback<TData> OnDataSelected { get; set; }
 
+    private string _value;
+
+    [Parameter]
+    public string NamaControl
+    {
+        get => _value;
+        set
+        {
+            if (_value == value) return;
+            _value = value;
+            NamaControlChanged.InvokeAsync(value);
+        }
+    }
+    [Parameter]
+    public EventCallback<string> NamaControlChanged { get; set; }
     public async Task DataSelected()
     {
         await this.OnDataSelected.InvokeAsync(this.SelectedItem);
@@ -60,4 +74,10 @@
                 loop++;
         }
     }
+
+    private async void HeaderClicked(MouseEventArgs args)
+	{
+		if (args.Button == 2)
+			await js.InvokeVoidAsync("alert", "Header Clicked!");
+	}
 }

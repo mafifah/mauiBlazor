@@ -1,6 +1,6 @@
 ﻿<div class="mb-3 col-md-6">
 	<label class="form-label">@Caption</label>
-	<input type="text" class="form-control" @bind-value="@BindingValue">
+    <input type="text" class="form-control" @bind-value="@Text">
 </div>
 
 @code {
@@ -10,17 +10,17 @@
     private string _value;
 
     [Parameter]
-    public string BindingValue 
+    public string Text 
     { 
         get => _value;
         set 
         { if (_value == value) return;
             _value = value;
-            BindingValueChanged.InvokeAsync(value);
+            TextChanged.InvokeAsync(value);
         }
     }
     [Parameter]
-    public EventCallback<string> BindingValueChanged { get; set; }
+    public EventCallback<string> TextChanged { get; set; }
 
     
 }

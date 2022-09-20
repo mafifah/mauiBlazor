@@ -2,27 +2,23 @@
 @using Newtonsoft.Json.Linq
 @using mauiBlazor.Data
 @inject DataService DataService
-@inject NavigationManager NavigationManager
-<mauiBlazor.Controls.PthRekaptulasi DataRekapitulasi="_daftarKaryawan" OnSelectedItem="@(args => OnDataDipilih(args))" IsLoading="@_isLoading" IsRekapitulasiVisible="true">
+<mauiBlazor.Controls.PthRekaptulasi DataRekapitulasi="_daftarKaryawan" OnSelectedItem="@(args => OnDataDipilih(args))"
+	IsLoading="@_isLoading" IsRekapitulasiVisible="true" OnSimpanData="@OnSimpanData" OnHapusData="@OnHapusData">
 	<Form>
 		<pthRazorLibrary.Controls.PthForm NamaForm="@_namaForm">
 			<KontenForm>
-				<pthRazorLibrary.Controls.PthEntri Caption="Nama Lengkap" @bind-BindingValue="@_karyawan.NamaLengkap"/>
-				<pthRazorLibrary.Controls.PthEntri Caption="Nama Panggilan" @bind-BindingValue="@_karyawan.NamaPanggilan" />
-				<pthRazorLibrary.Controls.PthEntri Caption="Alamat" @bind-BindingValue="@_karyawan.Alamat" />
-				<pthRazorLibrary.Controls.PthEntri Caption="Kota" @bind-BindingValue="@_karyawan.Kota" />
+				<pthRazorLibrary.Controls.PthEntri Caption="Nama Lengkap" @bind-Text=@_karyawan.NamaLengkap/>
+				<pthRazorLibrary.Controls.PthEntri Caption="Nama Panggilan" @bind-Text="@_karyawan.NamaPanggilan" />
+				<pthRazorLibrary.Controls.PthEntri Caption="Alamat" @bind-Text="@_karyawan.Alamat" />
+				<pthRazorLibrary.Controls.PthEntri Caption="Kota" @bind-Text="@_karyawan.Kota" />
 			</KontenForm>
-			<FooterForm>
-				<RadzenButton ButtonStyle="ButtonStyle.Secondary" Icon="save" Text="Simpan" Click="OnSimpanData" />&nbsp;
-				<RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Text="Hapus" Click="OnHapusData" />
-			</FooterForm>
 		</pthRazorLibrary.Controls.PthForm>
 	</Form>
 </mauiBlazor.Controls.PthRekaptulasi>
 @code{
 	private string _namaForm { get; set; } = "Tambah Karyawan";
-	private List<DataKaryawan> _daftarKaryawan = new List<DataKaryawan>();
-	private DataKaryawan _karyawan { get; set; } = new DataKaryawan();
+	private List<uioT1Karyawan> _daftarKaryawan = new List<uioT1Karyawan>();
+	private uioT1Karyawan _karyawan { get; set; } = new uioT1Karyawan();
 
 	private bool _isVisible { get; set; } = true;
 	private bool _isLoading { get; set; }
@@ -48,7 +44,7 @@
 			hasil = await DataService.UpdateKaryawan(_karyawan);
 		}
 		if(hasil)
-			_karyawan = new DataKaryawan();
+			_karyawan = new uioT1Karyawan();
 		await OnInitializedAsync();
 		_isLoading = false;
 		StateHasChanged();
@@ -59,7 +55,7 @@
 		var json = System.Text.Json.JsonSerializer.Serialize(value);
 		JObject obj = JObject.Parse(json);
 		object data = (object)obj["Data"];
-		DataKaryawan dataDipilih = System.Text.Json.JsonSerializer.Deserialize<DataKaryawan>(data.ToString());
+		uioT1Karyawan dataDipilih = System.Text.Json.JsonSerializer.Deserialize<uioT1Karyawan>(data.ToString());
 		_karyawan = dataDipilih;
 		_namaForm = "Form Edit Karyawan";
 	}
@@ -70,7 +66,7 @@
 		var hasil = await DataService.DeleteKaryawan(_karyawan.IdKaryawan);
 		if (hasil)
 		{
-			_karyawan = new DataKaryawan();
+			_karyawan = new uioT1Karyawan();
 			await OnInitializedAsync();
 		}
 		_isLoading = false;

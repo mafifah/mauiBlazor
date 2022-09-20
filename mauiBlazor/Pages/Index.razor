@@ -29,7 +29,7 @@
 @code{
     DxGrid Grid { get; set; }
     private Customer dataDipilih { get; set; } = new Customer();
-    private List<DataKaryawan> dataKaryawan = new List<DataKaryawan>();
+    private List<uioT1Karyawan> dataKaryawan = new List<uioT1Karyawan>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -37,7 +37,7 @@
         var data = DataService.GetData();
         await foreach (var item in data)
         {
-            var karyawan = item.Adapt<DataKaryawan>();
+            var karyawan = item.Adapt<uioT1Karyawan>();
             dataKaryawan.Add(karyawan);
             this.StateHasChanged();
         }
